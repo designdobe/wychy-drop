@@ -31,9 +31,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
-          responseModalities: ['IMAGE', 'TEXT'],
-          outputMimeType: 'image/jpeg',
-          outputCompressionQuality: 50
+          responseModalities: ['IMAGE', 'TEXT']
         }
       })
     });

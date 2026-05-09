@@ -1106,7 +1106,7 @@ async function generateAndShow() {
 
   } catch (e) {
     console.warn('이미지 생성 실패, SVG 폴백:', e);
-    showToast(`이미지 생성 실패: ${e.message}`);
+    showToast(`이미지 생성 실패: ${e?.message || String(e)}`);
     showWatchSVG();
   }
 }
