@@ -1083,7 +1083,7 @@ async function generateAndShow() {
     const imgPrompt = buildImagePrompt(answers.q1, answers.q2, answers.q3);
 
     /* Vercel 프록시를 통해 API 호출 (API key는 서버 환경변수에서 관리) */
-    const apiRes = await fetch('/api/generate', {
+    const apiRes = await fetch('https://wychy-gemini-proxy.designdobe.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: imgPrompt })
