@@ -999,26 +999,27 @@ async function handlePick(q, opt, btn) {
 /* API key는 서버(Vercel 환경변수)에서 관리 */
 
 /* ── 고정 프롬프트 ── */
-const FIXED_PROMPT = 'dreamy fantasy, 90s 3d photoshop style, surreal c4d octane render, floating watch, unique design, no text';
+const FIXED_PROMPT = 'dreamy fantasy, 90s 3d photoshop style, surreal c4d octane render, floating mystical artifact, avant-garde luxury object, no text, hyper-realistic, 8k';
+const POST_FIX = 'Y2K, square 1:1, volumetric lighting, centered composition';
 
 /* ── 답변별 동적 프롬프트 ── */
 function buildImagePrompt(a1, a2, a3) {
   const bg = {
-    1: 'mood: hot pink popping, 90s photoshop background, pink transparent watch',
-    2: 'mood: galaxy hyper-modern black starry, pixel art graphic, glittery black watch',
-    3: 'mood: lavender moon dreamy, 3d c4d clouds petals, pastel lavender watch'
+    1: 'mood: hot pink popping, 90s photoshop background, pink translucent material',
+    2: 'mood: galaxy hyper-modern black starry, pixel art graphic, matte obsidian finish',
+    3: 'mood: lavender moon dreamy, 3d c4d clouds petals, pastel lavender tones'
   };
   const mat = {
-    1: 'design: organic liquid curves, rounded edges, fluid form',
-    2: 'design: cyber metal transparent wire, tangled strap style',
-    3: 'design: raw gemstone motif, gemstone cuff shape'
+    1: 'design: organic liquid sculpture, melting fluid silhouette, distorted mercury-like form',
+    2: 'design: mecha armor plating, cyber sigilism metal wire, tangled tactical frame',
+    3: 'design: brutalist raw gemstone, chiseled crystal artifact, ancient-future relic'
   };
   const light = {
-    1: 'lighting: starry sci-fi red laser',
-    2: 'material: high-glossy neon acrylic, neon lighting',
-    3: 'material: nebula fog cloudy sponge, dreamy flare light'
+    1: 'details: abstract time runes, starry sci-fi red laser, glowing digital sigils',
+    2: 'details: high-glossy neon acrylic, neon lighting pulse, internal glitter dust',
+    3: 'details: nebula fog aura, dreamy flare light, atmospheric inner cosmos'
   };
-  return `${FIXED_PROMPT}, ${bg[a1]}, ${mat[a2]}, ${light[a3]}, Y2K, square 1:1`;
+  return `${FIXED_PROMPT}, ${bg[a1]}, ${mat[a2]}, ${light[a3]}, ${POST_FIX}`;
 }
 
 function showWatchLoading() {
