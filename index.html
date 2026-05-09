@@ -1173,59 +1173,63 @@ document.getElementById('btn-download').addEventListener('click', async () => {
   const tagText   = document.getElementById('result-tag').textContent;
   const subText   = document.getElementById('result-sub').textContent;
 
-  const W = 1080, H = 1080;
+  // ── 세로형 캔버스 (9:16, 1080×1920)
+  const W = 1080, H = 1920;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  // ── 배경 이미지 그리기
+  // ── 배경
+  ctx.fillStyle = '#0A0812'; ctx.fillRect(0, 0, W, H);
+
+  // ── 시계 이미지: 화면과 동일하게 중앙 42% 위치에 정사각형으로 배치
+  const watchSize = 900;
+  const watchX = (W - watchSize) / 2;
+  const watchCenterY = H * 0.42;
+  const watchY = watchCenterY - watchSize / 2;
+
   if (genImg && genImg.src) {
     try {
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = genImg.src; });
-      ctx.drawImage(img, 0, 0, W, H);
-    } catch(e) {
-      ctx.fillStyle = '#0A0812'; ctx.fillRect(0, 0, W, H);
-    }
-  } else {
-    ctx.fillStyle = '#0A0812'; ctx.fillRect(0, 0, W, H);
+      ctx.drawImage(img, watchX, watchY, watchSize, watchSize);
+    } catch(e) { /* 배경만 사용 */ }
   }
 
-  // ── 상단 그라데이션 오버레이
-  const topG = ctx.createLinearGradient(0, 0, 0, H * 0.42);
-  topG.addColorStop(0, 'rgba(0,0,0,.72)'); topG.addColorStop(1, 'rgba(0,0,0,0)');
+  // ── 상단 그라데이션 (텍스트 가독성)
+  const topG = ctx.createLinearGradient(0, 0, 0, watchY + watchSize * 0.35);
+  topG.addColorStop(0, 'rgba(0,0,0,.88)'); topG.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = topG; ctx.fillRect(0, 0, W, H);
 
-  // ── 하단 그라데이션 오버레이
-  const botG = ctx.createLinearGradient(0, H * 0.58, 0, H);
-  botG.addColorStop(0, 'rgba(0,0,0,0)'); botG.addColorStop(1, 'rgba(0,0,0,.82)');
+  // ── 하단 그라데이션
+  const botG = ctx.createLinearGradient(0, watchY + watchSize * 0.65, 0, H);
+  botG.addColorStop(0, 'rgba(0,0,0,0)'); botG.addColorStop(1, 'rgba(0,0,0,.88)');
   ctx.fillStyle = botG; ctx.fillRect(0, 0, W, H);
 
   await document.fonts.ready;
   ctx.textAlign = 'center';
 
-  // ── 태그 (상단)
-  ctx.font = '600 28px Inter, sans-serif';
+  // ── 태그 pill (상단, 화면의 product-tag 위치)
+  ctx.font = '600 32px Inter, sans-serif';
   ctx.fillStyle = '#B794F4';
-  ctx.fillText(tagText.toUpperCase(), W / 2, 88);
+  ctx.fillText(tagText.toUpperCase(), W / 2, 148);
 
-  // ── 제품명 (Cinzel Decorative, 하단)
-  ctx.font = '900 76px "Cinzel Decorative", serif';
+  // ── 제품명 (Cinzel Decorative, 태그 아래)
+  ctx.font = '900 86px "Cinzel Decorative", serif';
   ctx.fillStyle = 'white';
-  ctx.shadowColor = 'rgba(183,148,244,.6)'; ctx.shadowBlur = 28;
-  ctx.fillText(comboName, W / 2, H - 148);
+  ctx.shadowColor = 'rgba(183,148,244,.6)'; ctx.shadowBlur = 32;
+  ctx.fillText(comboName, W / 2, 258);
   ctx.shadowBlur = 0;
 
-  // ── 서브 텍스트
-  ctx.font = '400 30px Inter, sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,.45)';
-  ctx.fillText(subText, W / 2, H - 96);
+  // ── 서브 텍스트 (제품명 아래)
+  ctx.font = '400 34px Inter, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,.42)';
+  ctx.fillText(subText, W / 2, 318);
 
-  // ── WYCHY 워터마크
-  ctx.font = '700 22px Inter, sans-serif';
+  // ── WYCHY 워터마크 (하단)
+  ctx.font = '700 26px Inter, sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,.18)';
-  ctx.letterSpacing = '8px';
-  ctx.fillText('W Y C H Y', W / 2, H - 44);
+  ctx.fillText('W Y C H Y', W / 2, H - 80);
 
   canvas.toBlob(blob => {
     const url = URL.createObjectURL(blob);
