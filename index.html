@@ -996,7 +996,7 @@ async function handlePick(q, opt, btn) {
    RESULT SCREEN
 ────────────────────────────────────────── */
 /* ── AI Image Generation ─────────────────── */
-const GOOGLE_API_KEY = 'REMOVED_API_KEY';
+/* API key는 서버(Vercel 환경변수)에서 관리 */
 
 /* ── 고정 프롬프트 ── */
 const FIXED_PROMPT = 'dreamy fantasy, 90s 3d photoshop style, surreal c4d octane render, floating watch, unique design, no text';
@@ -1081,21 +1081,23 @@ async function generateAndShow() {
   try {
     const imgPrompt = buildImagePrompt(answers.q1, answers.q2, answers.q3);
 
-    /* Google GenAI SDK via esm.sh - CORS 없이 브라우저에서 직접 동작 */
-    const { GoogleGenAI } = await import('https://esm.sh/@google/genai@1');
-    const ai = new GoogleGenAI({ apiKey: GOOGLE_API_KEY });
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.1-flash-image-preview',
-      contents: imgPrompt,
-      config: { responseModalities: ['IMAGE', 'TEXT'], outputMimeType: 'image/jpeg', outputCompressionQuality: 50 }
+    /* Vercel 프록시를 통해 API 호출 (API key는 서버 환경변수에서 관리) */
+    const apiRes = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: imgPrompt })
     });
+    if (!apiRes.ok) {
+      const err = await apiRes.json().catch(() => ({}));
+      throw new Error(err.error || `서버 오류 ${apiRes.status}`);
+    }
+    const response = await apiRes.json();
 
-    let b64 = null, mime = 'image/png';
+    let b64 = null, mime = 'image/jpeg';
     for (const part of response.candidates?.[0]?.content?.parts ?? []) {
       if (part.inlineData?.data) {
         b64  = part.inlineData.data;
-        mime = part.inlineData.mimeType || 'image/png';
+        mime = part.inlineData.mimeType || 'image/jpeg';
         break;
       }
     }
