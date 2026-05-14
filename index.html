@@ -999,7 +999,7 @@ async function handlePick(q, opt, btn) {
 /* API key는 서버(Vercel 환경변수)에서 관리 */
 
 /* ── 고정 프롬프트 ── */
-const FIXED_PROMPT = 'dreamy fantasy concept, 90s 3d graphic design made by photoshop, 3d rendered watch floating on the air, surreal c4d octane render style, no text, hyper-realistic, 8k';
+const FIXED_PROMPT = 'Dreamy and fantastical concept, 90s-style 3D graphic design concept created with Photoshop, surreal C4D and Octane rendering style, 3D rendered watch floating in the air, unique and bizarre watch design unlike anything else in the world, no watch index, no watch crown, no text or frame graphics';
 const POST_FIX = 'Y2K, square 1:1, volumetric lighting, centered composition';
 
 /* ── 답변별 동적 프롬프트 ── */
@@ -1010,12 +1010,12 @@ function buildImagePrompt(a1, a2, a3) {
     3: 'mood: lavender moon dreamy, 3d c4d clouds petals, pastel lavender tones'
   };
   const mat = {
-    1: 'design: organic liquid sculpture, melting fluid silhouette, distorted mercury-like form',
-    2: 'design: mecha armor plating, cyber sigilism metal wire, tangled tactical frame',
-    3: 'design: brutalist raw gemstone, chiseled crystal artifact, ancient-future relic'
+    1: 'face and design: organic liquid sculpture, melting fluid silhouette, distorted mercury-like form',
+    2: 'face and design: tactical shape design accent, transparent glass armor plating, cyber intricately intertwined metal wire',
+    3: 'face and design: brutalist raw gemstone, chiseled crystal artifact, ancient-future relic'
   };
   const light = {
-    1: 'details: abstract time runes, starry sci-fi red laser, glowing digital sigils',
+    1: 'details: abstract starry sci-fi cyber punk style rainbow laser beam effect',
     2: 'details: high-glossy neon acrylic, neon lighting pulse, internal glitter dust',
     3: 'details: nebula fog aura, dreamy flare light, atmospheric inner cosmos'
   };
