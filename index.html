@@ -999,25 +999,25 @@ async function handlePick(q, opt, btn) {
 /* API key는 서버(Vercel 환경변수)에서 관리 */
 
 /* ── 고정 프롬프트 ── */
-const FIXED_PROMPT = 'Dreamy and fantastical concept, 90s-style 3D graphic design concept created with Photoshop, surreal C4D and Octane rendering style, 3D rendered watch floating in the air, unique and bizarre watch design unlike anything else in the world, no watch index, no watch crown, no text or frame graphics';
-const POST_FIX = 'Y2K, square 1:1, volumetric lighting, centered composition';
+const FIXED_PROMPT = 'dreamy fantasy concept, 90s 3d graphic design made by photoshop, 3d rendered unique floating celestial timepiece, surreal c4d octane render style, no text, hyper-realistic, 8k';
+const POST_FIX = 'square 1:1, volumetric lighting, centered composition';
 
 /* ── 답변별 동적 프롬프트 ── */
 function buildImagePrompt(a1, a2, a3) {
   const bg = {
-    1: 'mood: hot pink popping, 90s photoshop background, pink translucent material',
-    2: 'mood: galaxy hyper-modern black starry, pixel art graphic, matte obsidian finish',
-    3: 'mood: lavender moon dreamy, 3d c4d clouds petals, pastel lavender tones'
+    1: 'mood: hot pink popping, Y2K jelly sticker aesthetic, 90s photoshop bubble background, translucent pink glitter material',
+    2: 'mood: cosmic witch galaxy, starry midnight velvet, pixel art enchanted graphics, shimmering obsidian finish',
+    3: 'mood: lavender moon dreamy, magical girl ethereal aura, 3d c4d soft silk clouds, iridescent lavender petals'
   };
   const mat = {
-    1: 'face and design: organic liquid sculpture, melting fluid silhouette, distorted mercury-like form',
-    2: 'face and design: tactical shape design accent, transparent glass armor plating, cyber intricately intertwined metal wire',
-    3: 'face and design: brutalist raw gemstone, chiseled crystal artifact, ancient-future relic'
+    1: 'design: melting holographic heart sculpture, fluid chrome syrup silhouette, distorted liquid metal mercury form',
+    2: 'design: ornate magical girl wing-armor, delicate cyber sigilism filigree, intertwined transparent glass ribbons',
+    3: 'design: floating amethyst cluster, iridescent prism crystal artifact, magical girl wand gemstone relic'
   };
   const light = {
-    1: 'details: abstract starry sci-fi cyber punk style rainbow laser beam effect',
-    2: 'details: high-glossy neon acrylic, neon lighting pulse, internal glitter dust',
-    3: 'details: nebula fog aura, dreamy flare light, atmospheric inner cosmos'
+    1: 'details: celestial floating runes, prismatic rainbow light beams, glowing star-shaped digital sigils',
+    2: 'details: jelly-bead textures, pulsing heart-shaped neon glow, internal moving star-glitter dust',
+    3: 'details: iridescent pearlescent fog, nostalgic 90s lens flare, soft dreamy butterfly aura'
   };
   return `${FIXED_PROMPT}, ${bg[a1]}, ${mat[a2]}, ${light[a3]}, ${POST_FIX}`;
 }
