@@ -24,7 +24,7 @@ export default {
     try {
       // ── Submit: prompt가 있으면 BFL에 제출하고 task id 반환
       if (body.prompt) {
-        const res = await fetch('https://api.us1.bfl.ai/v1/flux-pro-1.1', {
+        const res = await fetch('https://api.bfl.ai/v1/flux-2-klein-9b', {
           method: 'POST',
           headers: { 'x-key': env.BFL_API_KEY, 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -32,7 +32,7 @@ export default {
             width: 1024,
             height: 1024,
             output_format: 'jpeg',
-            safety_tolerance: 6
+            safety_tolerance: 5
           })
         });
         if (!res.ok) {
@@ -45,7 +45,7 @@ export default {
 
       // ── Check: id가 있으면 결과 확인
       if (body.id) {
-        const res = await fetch(`https://api.us1.bfl.ai/v1/get_result?id=${body.id}`, {
+        const res = await fetch(`https://api.bfl.ai/v1/get_result?id=${body.id}`, {
           headers: { 'x-key': env.BFL_API_KEY }
         });
         const result = await res.json();
