@@ -999,25 +999,25 @@ async function handlePick(q, opt, btn) {
 /* API key는 서버(Vercel 환경변수)에서 관리 */
 
 /* ── 고정 프롬프트 ── */
-const FIXED_PROMPT = 'dreamy fantasy concept, 90s 3d graphic design made by photoshop, 3d rendered unique floating celestial timepiece, surreal c4d octane render style, no text, hyper-realistic, 8k';
-const POST_FIX = 'square 1:1, volumetric lighting, centered composition';
+const FIXED_PROMPT = 'dreamy 90s fantasy concept, 3D rendered strap style timepiece floating in the air, surreal c4d octane render style, high-glossy translucent plastic and jelly texture, inspired by 90s photoshop graphic design, no wrist strap, no mechanical parts, no text, hyper-realistic, 8k';
+const POST_FIX = 'Y2K aesthetic, MZ style, no wings, no victorian ornaments, no classical jewelry details, square 1:1, volumetric lighting, centered composition';
 
 /* ── 답변별 동적 프롬프트 ── */
 function buildImagePrompt(a1, a2, a3) {
   const bg = {
-    1: 'mood: hot pink popping, Y2K jelly sticker aesthetic, 90s photoshop bubble background, translucent pink glitter material',
-    2: 'mood: cosmic witch galaxy, starry midnight velvet, pixel art enchanted graphics, shimmering obsidian finish',
-    3: 'mood: lavender moon dreamy, magical girl ethereal aura, 3d c4d soft silk clouds, iridescent lavender petals'
+    1: 'mood: hot pink popping, Y2K glitter sticker aesthetic, 90s photoshop candy-gloss background, translucent neon pink jelly material',
+    2: 'mood: cosmic witch galaxy, midnight purple velvet aura, 90s pixel art enchanted sparkles, shimmering silver chrome finish',
+    3: 'mood: soft lavender moon dreamy, magical girl ethereal glow, 3d c4d marshmallow clouds, iridescent pastel lavender silk petals'
   };
   const mat = {
-    1: 'design: melting holographic heart sculpture, fluid chrome syrup silhouette, distorted liquid metal mercury form',
-    2: 'design: ornate magical girl wing-armor, delicate cyber sigilism filigree, intertwined transparent glass ribbons',
-    3: 'design: floating amethyst cluster, iridescent prism crystal artifact, magical girl wand gemstone relic'
+    1: 'design: melting holographic heart-shaped jewelry, fluid chrome syrup silhouette, distorted liquid metal mercury drop, no filigree',
+    2: 'design: sleek magical girl transformation core, sharp cyber sigilism lines, intricately intertwined transparent iridescent synthetic wires, tangled glass ribbons',
+    3: 'design: floating amethyst cluster, iridescent prism crystal heart, magical girl synthetic gemstone artifact with silver liquid metal accents'
   };
   const light = {
-    1: 'details: celestial floating runes, prismatic rainbow light beams, glowing star-shaped digital sigils',
-    2: 'details: jelly-bead textures, pulsing heart-shaped neon glow, internal moving star-glitter dust',
-    3: 'details: iridescent pearlescent fog, nostalgic 90s lens flare, soft dreamy butterfly aura'
+    1: 'details: celestial floating digital data streams, prismatic rainbow light beams, glowing star-shaped pixel icons, floating glitter particles',
+    2: 'details: high-glossy jelly-bead textures, pulsing heart-shaped neon glow, internal moving star-shaped glitter dust, 90s toy aesthetic',
+    3: 'details: iridescent pearlescent fog, nostalgic 90s dreamy lens flare, soft ethereal magic aura, glossy metallic sheen'
   };
   return `${FIXED_PROMPT}, ${bg[a1]}, ${mat[a2]}, ${light[a3]}, ${POST_FIX}`;
 }
