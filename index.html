@@ -1082,27 +1082,33 @@ async function generateAndShow() {
   try {
     const imgPrompt = buildImagePrompt(answers.q1, answers.q2, answers.q3);
 
-    /* Vercel 프록시를 통해 API 호출 (API key는 서버 환경변수에서 관리) */
-    const apiRes = await fetch('https://wychy-gemini-proxy.designdobe.workers.dev', {
+    /* BFL Flux API — Cloudflare Worker 프록시 (submit → poll) */
+    const WORKER = 'https://wychy-gemini-proxy.designdobe.workers.dev';
+
+    // 1. 이미지 생성 요청 제출
+    const submitRes = await fetch(WORKER, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: imgPrompt })
     });
-    if (!apiRes.ok) {
-      const err = await apiRes.json().catch(() => ({}));
-      throw new Error(err.error || `서버 오류 ${apiRes.status}`);
-    }
-    const response = await apiRes.json();
+    const submitData = await submitRes.json();
+    if (!submitRes.ok || submitData.error) throw new Error(submitData.error || `서버 오류 ${submitRes.status}`);
+    const { id } = submitData;
 
+    // 2. 결과 폴링 (2초 간격, 최대 120초)
     let b64 = null, mime = 'image/jpeg';
-    for (const part of response.candidates?.[0]?.content?.parts ?? []) {
-      if (part.inlineData?.data) {
-        b64  = part.inlineData.data;
-        mime = part.inlineData.mimeType || 'image/jpeg';
-        break;
-      }
+    for (let i = 0; i < 60; i++) {
+      await new Promise(r => setTimeout(r, 2000));
+      const checkRes = await fetch(WORKER, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      const result = await checkRes.json();
+      if (result.status === 'Ready') { b64 = result.b64; mime = result.mime || 'image/jpeg'; break; }
+      if (result.status === 'Error') throw new Error(result.error || '이미지 생성 실패');
     }
-    if (!b64) throw new Error('응답에 이미지 없음');
+    if (!b64) throw new Error('이미지 생성 타임아웃');
     showWatchImage(`data:${mime};base64,${b64}`);
 
   } catch (e) {
