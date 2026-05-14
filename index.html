@@ -999,7 +999,7 @@ async function handlePick(q, opt, btn) {
 /* API key는 서버(Vercel 환경변수)에서 관리 */
 
 /* ── 고정 프롬프트 ── */
-const FIXED_PROMPT = 'dreamy fantasy, 90s 3d photoshop style, surreal c4d octane render, floating mystical artifact, avant-garde luxury object, no text, hyper-realistic, 8k';
+const FIXED_PROMPT = 'dreamy fantasy, 90s 3d photoshop style, surreal c4d octane render, floating luxury wristwatch, avant-garde timepiece design, no text, hyper-realistic, 8k';
 const POST_FIX = 'Y2K, square 1:1, volumetric lighting, centered composition';
 
 /* ── 답변별 동적 프롬프트 ── */
@@ -1190,27 +1190,26 @@ document.getElementById('btn-download').addEventListener('click', async () => {
   ctx.fillStyle = '#0A0812'; ctx.fillRect(0, 0, W, H);
 
   // ── 시계 이미지: 화면과 동일하게 중앙 42% 위치에 정사각형으로 배치
-  const watchSize = 900;
-  const watchX = (W - watchSize) / 2;
-  const watchCenterY = H * 0.42;
-  const watchY = watchCenterY - watchSize / 2;
-
   if (genImg && genImg.src) {
     try {
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = genImg.src; });
-      ctx.drawImage(img, watchX, watchY, watchSize, watchSize);
+      // 화면과 동일하게 전체 배경을 채우는 cover 방식
+      const scale = Math.max(W / img.width, H / img.height);
+      const sw = img.width * scale;
+      const sh = img.height * scale;
+      ctx.drawImage(img, (W - sw) / 2, (H - sh) / 2, sw, sh);
     } catch(e) { /* 배경만 사용 */ }
   }
 
   // ── 상단 그라데이션 (텍스트 가독성)
-  const topG = ctx.createLinearGradient(0, 0, 0, watchY + watchSize * 0.35);
-  topG.addColorStop(0, 'rgba(0,0,0,.88)'); topG.addColorStop(1, 'rgba(0,0,0,0)');
+  const topG = ctx.createLinearGradient(0, 0, 0, H * 0.45);
+  topG.addColorStop(0, 'rgba(0,0,0,.82)'); topG.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = topG; ctx.fillRect(0, 0, W, H);
 
   // ── 하단 그라데이션
-  const botG = ctx.createLinearGradient(0, watchY + watchSize * 0.65, 0, H);
-  botG.addColorStop(0, 'rgba(0,0,0,0)'); botG.addColorStop(1, 'rgba(0,0,0,.88)');
+  const botG = ctx.createLinearGradient(0, H * 0.75, 0, H);
+  botG.addColorStop(0, 'rgba(0,0,0,0)'); botG.addColorStop(1, 'rgba(0,0,0,.72)');
   ctx.fillStyle = botG; ctx.fillRect(0, 0, W, H);
 
   await document.fonts.ready;
