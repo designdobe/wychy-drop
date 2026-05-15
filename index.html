@@ -465,21 +465,34 @@
     }
     .product-sub { display: none; }
 
-    /* 재선택 패널 */
+    /* 수정 버튼 */
+    .user-row-wrap {
+      display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+    }
+    .edit-bubble-btn {
+      flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(183,148,244,.15); border: .5px solid rgba(183,148,244,.35);
+      color: rgba(183,148,244,.9); font-size: 11px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font); line-height: 1;
+    }
+    .edit-bubble-btn:active { background: rgba(183,148,244,.32); }
+
+    /* 재선택 패널 — screen-chat 안쪽 기준 */
     .reselect-backdrop {
-      position: fixed; inset: 0; z-index: 290;
+      position: absolute; inset: 0; z-index: 290;
     }
     .reselect-panel {
-      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: min(430px, 100%); background: rgba(12,8,28,.97);
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(12,8,28,.97);
       border: .5px solid rgba(183,148,244,.25); border-bottom: none;
-      border-radius: 20px 20px 0 0; padding: 18px 14px 36px;
+      border-radius: 20px 20px 0 0; padding: 18px 14px 32px;
       z-index: 300; backdrop-filter: blur(20px);
       animation: slideUp .22s ease;
     }
     @keyframes slideUp {
-      from { transform: translateX(-50%) translateY(100%); }
-      to   { transform: translateX(-50%) translateY(0); }
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
     }
     .reselect-title {
       color: rgba(183,148,244,.55); font-size: 10px; letter-spacing: 2px;
@@ -494,7 +507,6 @@
       font-size: 13px; margin-bottom: 7px; text-align: left;
     }
     .reselect-option:active { background: rgba(183,148,244,.18); }
-    .user-bubble { cursor: pointer; }
     .gen-overlay {
       position: absolute; inset: 0; z-index: 2;
       background: linear-gradient(to bottom,
@@ -993,6 +1005,8 @@ function showReselectPanel(q, userRow) {
   document.querySelector('.reselect-panel')?.remove();
   document.querySelector('.reselect-backdrop')?.remove();
 
+  const container = document.getElementById('screen-chat');
+
   const backdrop = document.createElement('div');
   backdrop.className = 'reselect-backdrop';
 
@@ -1008,11 +1022,9 @@ function showReselectPanel(q, userRow) {
       panel.remove(); backdrop.remove();
       if (chatLocked) return;
       chatLocked = true;
-      // 현재 버블 이후 모든 메시지 제거
       let el = userRow.nextSibling;
       while (el) { const next = el.nextSibling; el.remove(); el = next; }
       userRow.remove();
-      // 해당 질문부터 답변 리셋
       for (let i = q.num; i <= 3; i++) delete answers[`q${i}`];
       await continuePick(q, opt);
       chatLocked = false;
@@ -1021,15 +1033,26 @@ function showReselectPanel(q, userRow) {
   });
 
   backdrop.addEventListener('click', () => { panel.remove(); backdrop.remove(); });
-  document.getElementById('screen-chat').appendChild(backdrop);
-  document.getElementById('screen-chat').appendChild(panel);
+  container.appendChild(backdrop);
+  container.appendChild(panel);
 }
 
 async function continuePick(q, opt) {
   answers[q.id] = opt.val;
   playUserSound();
-  const userRow = addBubble('user', `${opt.emoji} ${opt.label}`);
-  userRow.querySelector('.user-bubble').addEventListener('click', () => {
+
+  // 말풍선 + 수정버튼을 한 row에 담기
+  const userRow = document.createElement('div');
+  userRow.className = 'msg-row user';
+  userRow.innerHTML = `
+    <div class="user-row-wrap">
+      <button class="edit-bubble-btn" title="다시 선택">✎</button>
+      <div class="bubble user-bubble">${opt.emoji} ${opt.label}</div>
+    </div>`;
+  $body.appendChild(userRow);
+  scrollBot();
+
+  userRow.querySelector('.edit-bubble-btn').addEventListener('click', () => {
     if (chatLocked) return;
     showReselectPanel(q, userRow);
   });
