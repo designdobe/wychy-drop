@@ -124,6 +124,39 @@
     @keyframes lavenderFlow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
     @keyframes spin-slow { to { transform: rotate(360deg); } }
 
+    /* ── Mobile: 풀스크린 (phone 프레임 제거) ── */
+    @media (max-width: 600px) {
+      body {
+        padding: 0;
+        align-items: stretch;
+        background: var(--bg);
+        animation: none;
+      }
+      .page-title { display: none; }
+      .phone {
+        width: 100%;
+        background: none;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+      .phone-inner {
+        border-radius: 0;
+        height: 100dvh;
+        height: 100vh; /* fallback */
+      }
+      .notch { display: none; }
+      .profile-top-bar {
+        padding-top: max(env(safe-area-inset-top, 20px), 44px);
+      }
+      .chat-header {
+        padding-top: max(env(safe-area-inset-top, 20px), 44px);
+      }
+      .result-top {
+        padding-top: max(env(safe-area-inset-top, 20px), 54px);
+      }
+    }
+
     .profile-name { font-size: 22px; font-weight: 700; color: #1a1020; letter-spacing: -.3px; margin-bottom: 4px; }
     .profile-handle { font-size: 13px; color: var(--pink); margin-bottom: 6px; }
     .profile-badge {
