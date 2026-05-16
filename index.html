@@ -496,7 +496,7 @@
       width: 100%; height: 100%;
       object-fit: cover; object-position: center;
       z-index: 1;
-      transform: scale(0.88);
+      transform: scale(1);
     }
     .product-sub { display: none; }
 
@@ -1340,7 +1340,7 @@ document.getElementById('btn-download').addEventListener('click', async () => {
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = genImg.src; });
       // 화면과 동일하게 전체 배경을 채우는 cover 방식
-      const scale = Math.max(W / img.width, H / img.height) * 0.82;
+      const scale = Math.max(W / img.width, H / img.height);
       const sw = img.width * scale;
       const sh = img.height * scale;
       ctx.drawImage(img, (W - sw) / 2, (H - sh) / 2, sw, sh);
