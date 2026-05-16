@@ -609,7 +609,7 @@
           <span class="tag"># secret order</span>
         </div>
         <button class="profile-msg-btn" id="profile-msg-btn">✉ 메시지 보내기</button>
-        <p style="font-size:9px;letter-spacing:3px;color:rgba(244,114,182,0.35);font-weight:600;text-align:center;margin-top:14px;text-transform:uppercase;">@KIM.DOBE</p>
+        <p style="font-size:9px;letter-spacing:2px;color:rgba(244,114,182,0.3);font-weight:500;text-align:center;margin-top:16px;text-transform:uppercase;line-height:1.7;">A Project by<br><span style="font-weight:700;letter-spacing:3px;font-size:10px;color:rgba(244,114,182,0.45);">@KIM.DOBE</span></p>
       </div>
     </div>
 
@@ -627,7 +627,7 @@
       </div>
 
       <div class="chat-body" id="chat-body">
-        <div class="timestamp">Today, 11:22 PM</div>
+        <div class="timestamp" id="chat-timestamp"></div>
       </div>
 
       <!-- Quiz panel (3 circle buttons) -->
@@ -778,6 +778,15 @@ const LT = {
   3:{ glow:'rgba(255,255,255,.50)', shim:'rgba(255,255,255,.85)',  p:['#FFFFFF','#FFE8F8','#EB79A8','#FFF0FC','#FFFFFF'] }
 };
 const MAT_NAMES = {1:'Liquid', 2:'Metal', 3:'Stone'};
+
+function nowLabel() {
+  const d = new Date();
+  const h = d.getHours(), m = d.getMinutes();
+  const ampm = h < 12 ? 'AM' : 'PM';
+  const hh = h % 12 || 12;
+  const mm = String(m).padStart(2, '0');
+  return `${hh}:${mm} ${ampm}`;
+}
 
 /* 27가지 조합 네이밍 (Q1-Q2-Q3) */
 const COMBO_NAMES = {
@@ -935,6 +944,7 @@ const answers = {q1:null, q2:null, q3:null};
 let chatLocked = false;
 
 const $body   = document.getElementById('chat-body');
+document.getElementById('chat-timestamp').textContent = `Today, ${nowLabel()}`;
 const $panel  = document.getElementById('quiz-panel');
 const $label  = document.getElementById('quiz-q-label');
 const $btns   = document.getElementById('circle-btns');
@@ -1553,7 +1563,7 @@ async function resetQuiz() {
   $chat.classList.remove('out');
 
   // Clear chat body (keep timestamp)
-  $body.innerHTML = '<div class="timestamp">Today, 11:22 PM</div>';
+  $body.innerHTML = `<div class="timestamp">Today, ${nowLabel()}</div>`;
 
   // Hide quiz panel
   $panel.style.display = 'none';
