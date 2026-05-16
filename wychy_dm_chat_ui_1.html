@@ -779,6 +779,15 @@ const LT = {
 };
 const MAT_NAMES = {1:'Liquid', 2:'Metal', 3:'Stone'};
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 function nowLabel() {
   const d = new Date();
   const h = d.getHours(), m = d.getMinutes();
@@ -1230,11 +1239,12 @@ async function generateAndShow() {
 
     /* BFL Flux API — Cloudflare Worker 프록시 (submit → poll) */
     const WORKER = 'https://wychy-gemini-proxy.designdobe.workers.dev';
+    const WORKER_HEADERS = { 'Content-Type': 'application/json', 'X-App-Token': 'wychy-2025-drop' };
 
     // 1. 이미지 생성 요청 제출
     const submitRes = await fetch(WORKER, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: WORKER_HEADERS,
       body: JSON.stringify({ prompt: imgPrompt })
     });
     const submitData = await submitRes.json();
@@ -1247,7 +1257,7 @@ async function generateAndShow() {
       await new Promise(r => setTimeout(r, 2000));
       const checkRes = await fetch(WORKER, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: WORKER_HEADERS,
         body: JSON.stringify({ id })
       });
       const result = await checkRes.json();
@@ -1255,7 +1265,8 @@ async function generateAndShow() {
       if (result.status === 'Error') throw new Error(result.error || '이미지 생성 실패');
     }
     if (!b64) throw new Error('이미지 생성 타임아웃');
-    showWatchImage(`data:${mime};base64,${b64}`);
+    const safeMime = ['image/jpeg','image/png','image/webp'].includes(mime) ? mime : 'image/jpeg';
+    showWatchImage(`data:${safeMime};base64,${b64}`);
 
   } catch (e) {
     console.warn('이미지 생성 실패, SVG 폴백:', e);
@@ -1583,7 +1594,7 @@ async function sendFree() {
   $input.value = '';
   chatLocked = true;
   playUserSound();
-  addBubble('user', txt);
+  addBubble('user', escapeHtml(txt));
   const rxs = ["그 에너지 너무 좋아 🌙","완전 공감이야 ✨","곧 엄청난 드롭이 올 예정이야, 기대해 🔮","너 진짜 취향 레전드다 🖤","Elena가 지금 딱 너한테 맞는 걸 고르는 중이야... 🕯️"];
   await elenaTypeSay(rxs[Math.floor(Math.random()*rxs.length)], 1000+Math.random()*500);
   chatLocked = false;

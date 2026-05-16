@@ -16,6 +16,9 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
     if (request.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: cors });
 
+    const appToken = request.headers.get('X-App-Token');
+    if (!appToken || appToken !== env.APP_TOKEN) return json({ error: 'Unauthorized' }, 401, cors);
+
     let body;
     try { body = await request.json(); } catch {
       return json({ error: 'Invalid JSON' }, 400, cors);
